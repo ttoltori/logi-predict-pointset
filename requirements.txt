@@ -1,0 +1,66 @@
+# requirements.txt — A-Point-Set-Generation
+# ==================================================
+# Linux GPU 서버 학습용 패키지 목록
+#
+# 설치 방법:
+#   1. 가상환경 생성: python -m venv .venv && source .venv/bin/activate
+#   2. PyTorch CUDA 설치 (아래 주석 참고 — GPU에 맞는 CUDA 버전 선택)
+#   3. 나머지 패키지 설치: pip install -r requirements.txt
+#
+# 주의:
+#   - torch/torchvision은 --index-url로 별도 설치해야 CUDA 빌드가 설치됨
+#   - pytorch3d는 Linux에서 소스 빌드 권장 (아래 주석 참고)
+#   - Windows에서는 pytorch3d 대신 저장소 내 chamfer_distance.py 사용 (별도 설치 불필요)
+
+# ── PyTorch (CUDA 빌드 — 별도 설치 필요) ──────────────────────
+# RTX 50xx (Blackwell) — CUDA 12.8 이상 필수:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+#
+# RTX 30xx/40xx (Ampere/Ada) — CUDA 12.1:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+#
+# RTX 20xx (Turing) — CUDA 11.8:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+#
+# CPU 전용 (학습 비권장):
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+#
+# 아래는 CPU 버전으로만 적어둠 (이미 별도 설치한 경우 덮어쓰지 않음)
+torch>=2.0
+torchvision>=0.15
+
+# ── pytorch3d (Chamfer Distance) ──────────────────────────────
+# Linux에서 소스 빌드 권장 (CUDA 가속):
+#   pip install "git+https://github.com/facebookresearch/pytorch3d.git"
+#
+# 또는 저장소 내 pytorch3d/ 디렉토리에서:
+#   cd pytorch3d && pip install -e .
+#
+# Windows에서는 빌드가 어려우므로 저장소 내 chamfer_distance.py (순수 PyTorch) 사용.
+# 이 파일이 from chamfer_distance import ChamferDistance 를 가로채어 동일 API 제공.
+# pytorch3d가 설치되어 있으면 pytorch3d가 우선 적용됨.
+
+# ── 핵심 패키지 ───────────────────────────────────────────────
+numpy>=1.24
+pillow>=9.0
+tqdm>=4.60
+
+# ── 시각화 ────────────────────────────────────────────────────
+matplotlib>=3.5
+
+# ── 평가/분석 ─────────────────────────────────────────────────
+pandas>=2.0
+scikit-learn>=1.2
+
+# ── 이미지/데이터 처리 ───────────────────────────────────────
+opencv-python>=4.7
+imageio>=2.20
+
+# ── 부피 추정 (Volume_estimation.py) ──────────────────────────
+# open3d는 Python 3.14 미지원.
+# 현재 코드에서 import만 하고 실제 사용은 하지 않음.
+# 설치 가능한 환경에서는 설치 권장 (향후 기능 추가 대비).
+# open3d>=0.17
+
+# ── 빌드 도구 (pytorch3d 소스 빌드 시 필요) ───────────────────
+ninja>=1.11
